@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 简易背包面板：
 /// - 自动按容量生成格子
-/// - 显示图标/数量
+/// - 显示图标/数量（数量=1也显示）
 /// - 左键点击切换激活物品
 /// - I 键开/关（可禁用）
 /// 依赖：PlayerInventoryHolder、ActiveItemController、ItemDatabaseSO
@@ -13,23 +13,23 @@ using System.Collections.Generic;
 public class InventoryUI : MonoBehaviour
 {
     [Header("Refs")]
-    public PlayerInventoryHolder playerInv;      // 直接拖 Player 身上这个组件
-    public ActiveItemController activeCtrl;     // 直接拖 Player 身上这个组件
-    public ItemDatabaseSO itemDB;         // 一般从 playerInv.itemDB 取；也可手动指定
+    public PlayerInventoryHolder playerInv;      // Player 身上的 PlayerInventoryHolder
+    public ActiveItemController activeCtrl;     // Player 身上的 ActiveItemController
+    public ItemDatabaseSO itemDB;         // 一般从 playerInv.itemDB 取
 
     [Header("UI")]
     public GameObject panelRoot;                 // 背包面板根节点（整体开/关）
     public Transform gridRoot;                  // 放格子的父物体（带 GridLayoutGroup）
     public InventorySlotUI slotPrefab;           // 槽位预制
-    public Sprite emptySprite;                   // 空格占位图（可空）
-    [Range(0, 1f)] public float emptyIconAlpha = 0.15f;
+    public Sprite emptySprite;                   // 空格占位图（可空，建议用透明1x1）
+    [Range(0f, 1f)] public float emptyIconAlpha = 0.15f;
 
     [Header("Options")]
     public bool buildOnAwake = true;             // 启动时构建格子
     public bool toggleWithKey = true;            // 用按键切换
     public KeyCode toggleKey = KeyCode.I;
 
-    readonly List<InventorySlotUI> _slots = new();
+    private readonly List<InventorySlotUI> _slots = new();
 
     void Reset()
     {
@@ -61,9 +61,7 @@ public class InventoryUI : MonoBehaviour
     void Update()
     {
         if (toggleWithKey && Input.GetKeyDown(toggleKey))
-        {
             TogglePanel();
-        }
     }
 
     public void TogglePanel()
@@ -97,16 +95,11 @@ public class InventoryUI : MonoBehaviour
     {
         if (!_isPanelVisible()) return;
 
-        // 容量变化则重建 UI
         if (_slots.Count != GetCapacity())
-        {
             BuildSlots();
-        }
 
         for (int i = 0; i < _slots.Count; i++)
-        {
             _slots[i].Refresh();
-        }
     }
 
     public ItemStack GetStack(int index)
@@ -129,26 +122,24 @@ public class InventoryUI : MonoBehaviour
         RefreshAll();
     }
 
-    // 如需右键丢弃，可开放此方法并调用你已有的丢弃逻辑
-    // public void OnSlotRightClick(int index) { ... }
-
+    /// <summary>根据物品ID解析图标；若数据库或字段缺失，返回 null</summary>
     public Sprite ResolveIcon(string id)
     {
-        if (string.IsNullOrEmpty(id)) return emptySprite;
-        var so = (itemDB != null) ? itemDB.Get(id) : null;   // 你的数据库方法若不是 Get，请改名
-        if (so == null) return emptySprite;
+        if (string.IsNullOrEmpty(id)) return null;
+        var so = (itemDB != null) ? itemDB.Get(id) : null;   // 若方法名不是 Get，请按你的 ItemDB 改名
+        if (so == null) return null;
 
         // ★ 如果 ItemSO 的图标字段不是 "icon"，把下面这行的 "icon" 改成你的字段名
-        return so.icon != null ? so.icon : emptySprite;
+        return so.icon;
     }
 
-    int GetCapacity()
+    private int GetCapacity()
     {
         if (playerInv == null || playerInv.Inventory == null || playerInv.Inventory.slots == null) return 0;
         return playerInv.Inventory.slots.Length;
     }
 
-    bool _isPanelVisible()
+    private bool _isPanelVisible()
     {
         return panelRoot == null || panelRoot.activeInHierarchy;
     }

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f54d0d50e3345f40853eaa99b03211f, type: 3}
-  m_Name: Apple
+  m_Name: banana
   m_EditorClassIdentifier: 
-  id: apple
-  displayName: "\u82F9\u679C"
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  id: banana
+  displayName: "\u9999\u8549"
+  icon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
   category: 0
   actionType: 0
-  heldPrefab: {fileID: 9022228501059136267, guid: 2c980d7acff825f4d9552b7e47c95c5e, type: 3}
+  heldPrefab: {fileID: 8709066666756872655, guid: 8f73211aad17ef84a8dc19dffd34781e, type: 3}
   heldLocalPosition: {x: 0, y: 0, z: 0}
   heldLocalEulerAngles: {x: 0, y: 0, z: 0}
   heldLocalScale: {x: 1, y: 1, z: 1}
