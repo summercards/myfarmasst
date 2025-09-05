@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - plantItemId: banana
-    cropPrefab: {fileID: 9022228501059136267, guid: 2c980d7acff825f4d9552b7e47c95c5e, type: 3}
+    cropPrefab: {fileID: 2697712092535857849, guid: b50aed3c6506a1f40a148c9b0d4e2fc1, type: 3}
     stages:
-    - duration: 0
+    - duration: 3
       visual: {fileID: 0}
-    - duration: 0
-      visual: {fileID: 0}
+    defaultStageDuration: 3
     produceId: banana
     produceMin: 1
     produceMax: 3
+    produceWorldPrefab: {fileID: 2162943329169117121, guid: 5801035ddbe8d9b45b9239e6df7edb04, type: 3}
     plantCooldown: 0.2
     spawnYOffset: 0.02
